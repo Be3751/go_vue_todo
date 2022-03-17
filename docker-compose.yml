@@ -1,10 +1,12 @@
 version: "3"
 services:
-  # client: 
-  #   build: ./client
-  #   tty: true
-  #   volumes:
-  #     - ./client/src:/
+  client: 
+    build: ./client
+    ports:
+      - 8080:8080 # ホスト側のポート:コンテナ側のポート
+    volumes:
+      - ./client:/src # ホスト側のディレクトリ:コンテナ側のディレクトリ
+    tty: true
   server:
     build: ./server # ビルド時のDockerfileの位置
     tty: true # コンテナの永続化
