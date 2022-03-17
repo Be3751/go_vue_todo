@@ -1,0 +1,21 @@
+version: "3"
+services:
+  # client: 
+  #   build: ./client
+  #   tty: true
+  #   volumes:
+  #     - ./client/src:/
+  server:
+    build: ./server # ビルド時のDockerfileの位置
+    tty: true # コンテナの永続化
+    volumes:
+      - ./server:/go/src/server # マウントするディレクトリの指定
+  # db: 
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_PORT: 3306
+  #   ports:
+  #     - 3306:3306 # コンテナの3306番をローカルの3306番にマッピング
+  #   volumes:
+  #     - 
