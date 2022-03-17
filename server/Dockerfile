@@ -9,4 +9,4 @@ RUN apk update && apk add git
 WORKDIR /go/src/server
 
 # ホストのファイル・ディレクトリをコンテナイメージにコピー
-ADD . /go/src/server 
+ADD . /go/src/server

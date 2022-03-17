@@ -1,13 +1,15 @@
 version: "3"
 services:
-  client: 
+  client:
+    container_name: client_vue
     build: ./client
     ports:
       - 8080:8080 # ホスト側のポート:コンテナ側のポート
     volumes:
-      - ./client:/src # ホスト側のディレクトリ:コンテナ側のディレクトリ
+      - ./client/src:/client/src # ホスト側のディレクトリ:コンテナ側のディレクトリ
     tty: true
   server:
+    container_name: server_go
     build: ./server # ビルド時のDockerfileの位置
     tty: true # コンテナの永続化
     volumes:
