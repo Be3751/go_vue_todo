@@ -10,3 +10,7 @@ WORKDIR /go/src/server
 
 # ホストのファイル・ディレクトリをコンテナイメージにコピー
 ADD . /go/src/server
+
+RUN go mod download
+
+CMD ["go", "run", "main.go"]

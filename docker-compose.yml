@@ -4,22 +4,32 @@ services:
     container_name: client_vue
     build: ./client
     ports:
-      - 8080:8080 # ホスト側のポート:コンテナ側のポート
+      - "8080:8080" # ホスト側のポート:コンテナ側のポート
     volumes:
-      - ./client/src:/client/src # ホスト側のディレクトリ:コンテナ側のディレクトリ
+      - ./client/src:/client/src # srcディレクトリのみマッピング
     tty: true
   server:
     container_name: server_go
     build: ./server # ビルド時のDockerfileの位置
-    tty: true # コンテナの永続化
+    ports:
+      - "3000:3000"
     volumes:
       - ./server:/go/src/server # マウントするディレクトリの指定
-  # db: 
-  #   image: mysql:latest
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_PORT: 3306
-  #   ports:
-  #     - 3306:3306 # コンテナの3306番をローカルの3306番にマッピング
-  #   volumes:
-  #     - 
+    tty: true # コンテナの永続化
+  db: 
+    platform: linux/x86_64 # M1Mac用にプラットフォームを指定
+    container_name: db_mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo_db
+      MYSQL_USER: be3
+      MYSQL_PASSWORD: password
+      MYSQL_PORT: 3306
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306" # コンテナの3306番をローカルの3306番にマッピング
+    volumes:
+      - ./db/sqls:/docker-entrypoint-initdb.d
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
