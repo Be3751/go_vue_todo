@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/be3/go_vue_todo/server/model"
@@ -9,20 +10,26 @@ import (
 )
 
 func TaskList(c *gin.Context) {
+	fmt.Println("GET /list")
+
 	taskService := service.TaskService{}
 	tasks := taskService.GetTaskList(10)
 	c.JSON(http.StatusOK, tasks)
+	return
 }
 
 func CreateTask(c *gin.Context) {
-	task := model.Task{}
-	err := c.Bind(&task)
+	fmt.Println("POST /create")
+
+	var task model.Task
+	err := c.BindJSON(&task)
 	if err != nil {
-		return
+		c.String(http.StatusInternalServerError, "Server Error")
 	}
 	taskService := service.TaskService{}
 	err = taskService.SetTask(&task)
 	if err != nil {
+		fmt.Println("error")
 		c.String(http.StatusInternalServerError, "Server Error")
 	}
 	c.JSON(http.StatusOK, task)

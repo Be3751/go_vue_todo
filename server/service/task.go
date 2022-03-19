@@ -1,15 +1,15 @@
 package service
 
-import "github.com/be3/go_vue_todo/server/model"
+import (
+	"fmt"
+
+	"github.com/be3/go_vue_todo/server/model"
+)
 
 type TaskService struct{}
 
 func (TaskService) GetTaskList(limit int) (tasks []model.Task) {
 	rows, err := Db.Query("select id, content from tasks limit $1", limit)
-
-	if err != nil {
-		return nil
-	}
 
 	for rows.Next() {
 		task := model.Task{}
@@ -25,12 +25,21 @@ func (TaskService) GetTaskList(limit int) (tasks []model.Task) {
 }
 
 func (TaskService) SetTask(task *model.Task) (err error) {
-	statement := "insert into tasks (content) values ($1) returning id"
-	stmt, err := Db.Prepare(statement)
+	fmt.Println("SetTask")
+
+	stmt, err := Db.Prepare("insert into tasks (content) values (?)")
 	if err != nil {
-		return
+		fmt.Println("Prepare error")
+	}
+	result, err := stmt.Exec(task.Content)
+	if err != nil {
+		fmt.Println("Exec error")
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(task.Content).Scan(&task.Id)
+
+	id, _ := result.LastInsertId()
+	task.Id = int(id)
+
+	fmt.Println(task)
 	return
 }
