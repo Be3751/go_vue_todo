@@ -13,9 +13,12 @@ func TaskList(c *gin.Context) {
 	fmt.Println("GET /list")
 
 	taskService := service.TaskService{}
-	tasks := taskService.GetTaskList(10)
+	tasks, err := taskService.GetTaskList()
+	if err != nil {
+		fmt.Println("error")
+		c.String(http.StatusInternalServerError, "Server Error")
+	}
 	c.JSON(http.StatusOK, tasks)
-	return
 }
 
 func CreateTask(c *gin.Context) {

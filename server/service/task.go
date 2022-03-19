@@ -8,20 +8,24 @@ import (
 
 type TaskService struct{}
 
-func (TaskService) GetTaskList(limit int) (tasks []model.Task) {
-	rows, err := Db.Query("select id, content from tasks limit $1", limit)
-
+func (TaskService) GetTaskList() ([]model.Task, error) {
+	var tasks []model.Task
+	rows, err := Db.Query("select id, content from tasks")
+	if err != nil {
+		fmt.Println("Select error")
+	}
 	for rows.Next() {
 		task := model.Task{}
 		err = rows.Scan(&task.Id, &task.Content)
 		if err != nil {
-			return nil
+			return nil, err
 		}
 		tasks = append(tasks, task)
+		fmt.Println(task)
 	}
 	rows.Close()
 
-	return
+	return tasks, nil
 }
 
 func (TaskService) SetTask(task *model.Task) (err error) {
