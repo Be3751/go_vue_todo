@@ -37,3 +37,21 @@ func CreateTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, task)
 }
+
+func ReadTask(c *gin.Context) {
+	fmt.Println("GET /read/:id")
+
+	var task model.Task
+	taskService := service.TaskService{}
+	id := c.Param("id")
+	task, err := taskService.GetTaskById(id)
+	if err != nil {
+		fmt.Println("error")
+		c.String(http.StatusInternalServerError, "Server Error")
+	}
+	if task.Content == "" {
+		c.JSON(http.StatusOK, "No such a task")
+	} else {
+		c.JSON(http.StatusOK, task)
+	}
+}

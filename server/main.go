@@ -10,6 +10,7 @@ func main() {
 
 	router.GET("/list", controller.TaskList)
 	router.POST("/create", controller.CreateTask)
+	router.GET("/get/:id", controller.ReadTask)
 
 	router.Run(":3000")
 }

@@ -2,7 +2,6 @@ package service
 
 import (
 	"database/sql"
-	"fmt"
 
 	// "os"
 
@@ -25,12 +24,5 @@ func init() {
 	Db, err = sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
-	}
-
-	err = Db.Ping()
-	if err != nil {
-		fmt.Println("データベース接続失敗")
-	} else {
-		fmt.Println("データベース接続成功")
 	}
 }

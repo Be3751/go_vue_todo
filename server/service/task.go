@@ -28,6 +28,15 @@ func (TaskService) GetTaskList() ([]model.Task, error) {
 	return tasks, nil
 }
 
+func (TaskService) GetTaskById(id string) (model.Task, error) {
+	var task model.Task
+	err := Db.QueryRow("select id, content from tasks where id = ?", id).Scan(&task.Id, &task.Content)
+	if err != nil {
+		fmt.Println("Select error")
+	}
+	return task, nil
+}
+
 func (TaskService) SetTask(task *model.Task) (err error) {
 	fmt.Println("SetTask")
 
