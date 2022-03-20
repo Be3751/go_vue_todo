@@ -30,7 +30,7 @@ func CreateTask(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Server Error")
 	}
 	taskService := service.TaskService{}
-	err = taskService.SetTask(&task)
+	err = taskService.AddTask(&task)
 	if err != nil {
 		fmt.Println("error")
 		c.String(http.StatusInternalServerError, "Server Error")
@@ -54,4 +54,23 @@ func ReadTask(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, task)
 	}
+}
+
+func UpdateTask(c *gin.Context) {
+	fmt.Println("PUT /update/:id")
+
+	task := model.Task{}
+	err := c.BindJSON(&task) // この時点でHTTPリクエストからのJSONを取得できていない可能性が高い
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
+	id := c.Param("id")
+
+	taskService := service.TaskService{}
+	err = taskService.ChangeTask(id, &task)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "a database error occurred.")
+	}
+
+	c.JSON(http.StatusOK, task)
 }
