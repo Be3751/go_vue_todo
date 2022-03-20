@@ -62,7 +62,7 @@ func (TaskService) AddTask(task *model.Task) (err error) {
 	return
 }
 
-func (TaskService) ChangeTask(id string, task *model.Task) (err error) {
+func (TaskService) ChangeTaskById(id string, task *model.Task) (err error) {
 	fmt.Println("ChangeTask")
 
 	stmt, err := Db.Prepare("update tasks set content = ? where id = ?")

@@ -67,7 +67,7 @@ func UpdateTask(c *gin.Context) {
 	id := c.Param("id")
 
 	taskService := service.TaskService{}
-	err = taskService.ChangeTask(id, &task)
+	err = taskService.ChangeTaskById(id, &task)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "a database error occurred.")
 	}
