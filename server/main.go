@@ -12,6 +12,7 @@ func main() {
 	router.POST("/create", controller.CreateTask)
 	router.GET("/read/:id", controller.ReadTask)
 	router.PUT("/update/:id", controller.UpdateTask)
+	router.DELETE("/delete/:id", controller.DeleteTask)
 
 	router.Run(":3000")
 }

@@ -83,3 +83,22 @@ func (TaskService) ChangeTaskById(id string, task *model.Task) (err error) {
 
 	return
 }
+
+func (TaskService) DeleteTaskById(id string) (err error) {
+	fmt.Println("DeleteTask")
+
+	stmt, err := Db.Prepare("delete from tasks where id = ?")
+	if err != nil {
+		fmt.Println("Prepare error")
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		fmt.Println("Exec error")
+		return
+	}
+
+	return
+}
