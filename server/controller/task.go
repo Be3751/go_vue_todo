@@ -17,8 +17,9 @@ func TaskList(c *gin.Context) {
 	if err != nil {
 		fmt.Println("error")
 		c.String(http.StatusInternalServerError, "Server Error")
+	} else {
+		c.JSON(http.StatusOK, tasks)
 	}
-	c.JSON(http.StatusOK, tasks)
 }
 
 func CreateTask(c *gin.Context) {
@@ -34,8 +35,9 @@ func CreateTask(c *gin.Context) {
 	if err != nil {
 		fmt.Println("error")
 		c.String(http.StatusInternalServerError, "Server Error")
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "succeeded to create the task."})
 	}
-	c.JSON(http.StatusOK, task)
 }
 
 func ReadTask(c *gin.Context) {
@@ -70,7 +72,20 @@ func UpdateTask(c *gin.Context) {
 	err = taskService.ChangeTaskById(id, &task)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "a database error occurred.")
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "succeeded to update the task."})
 	}
+}
 
-	c.JSON(http.StatusOK, task)
+func DeleteTask(c *gin.Context) {
+	fmt.Println("DELETE /delete/:id")
+
+	id := c.Param("id")
+	taskService := service.TaskService{}
+	err := taskService.DeleteTaskById(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "succeeded to delete the post."})
+	}
 }
