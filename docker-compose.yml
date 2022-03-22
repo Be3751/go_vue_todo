@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8080" # ホスト側のポート:コンテナ側のポート
     volumes:
-      - ./client/src:/client/src # srcディレクトリのみマッピング
+      - ./client:/client # srcディレクトリのみマッピング
     tty: true
   server:
     container_name: server_go
