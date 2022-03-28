@@ -15,15 +15,15 @@ import PageFooter from './components/PageFooter.vue'
 
 export default {
   name: 'App',
-
   components: {
     HelloWorld,
     NavBar,
     PageFooter
   },
-
   data: () => ({
-    //
+    title: "",
   }),
+  methods: {
+  }
 };
 </script>
