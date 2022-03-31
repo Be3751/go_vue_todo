@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="mt-2 ml-2">
-      <H1>Here're your tasks!</H1>
+      <h1>Here're your tasks!</h1>
     </v-row>
     <v-row>
       <!-- <v-col> -->
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import TaskCard from '../components/TaskCard.vue'
+import TaskCard from '@/components/TaskCard.vue'
 import axios from 'axios'
 
 export default {
