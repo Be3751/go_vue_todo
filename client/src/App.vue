@@ -2,21 +2,19 @@
   <v-app>
     <NavBar/>
     <v-main>
-      <TaskList/>
+      <router-view/>
     </v-main>
     <PageFooter/>
   </v-app>
 </template>
 
 <script>
-import TaskList from './view/TaskList.vue'
-import NavBar from './components/NavBar.vue';
-import PageFooter from './components/PageFooter.vue'
+import NavBar from '@/components/NavBar.vue';
+import PageFooter from '@/components/PageFooter.vue'
 
 export default {
   name: 'App',
   components: {
-    TaskList,
     NavBar,
     PageFooter
   },
