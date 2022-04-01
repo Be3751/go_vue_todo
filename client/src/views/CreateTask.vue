@@ -3,7 +3,7 @@
         <v-row class="mt-2 ml-2">
         <h1>Make your task!</h1>
         </v-row>
-        <v-row>
+        <v-row class="mt-2 ml-2">
             <v-form ref="create_form">
                 <v-container>
                     <v-row>
@@ -15,6 +15,14 @@
                     </v-row>
                 </v-container>
             </v-form>
+        </v-row>
+        <v-row class="mt-7 ml-2">
+            <div>
+                <h2 v-if="errored">Sorry. Couldn't send the data!</h2>
+            </div>
+            <div>
+                <h2 v-if="succeeded">Successful to send the data!</h2>
+            </div>
         </v-row>
     </v-container>
 </template>
@@ -29,6 +37,8 @@ export default {
         required: value => !!value || "Must include any letter!",
         limit_length: value => value.length <= 50 || "Must include 50 letters or less!",
         info: null,
+        errored: false,
+        succeeded: false
     }),
     methods: {
         submit() {
@@ -44,8 +54,15 @@ export default {
             axios.post("http://localhost:3000/create", {
                 content: content
             })
-            .then(response => (this.info = response.bpi))
-            .catch(error => console.log(error));
+            .then(response => {
+                this.info = response.bpi;
+                this.succeeded = true;
+            })
+            .catch(error => {
+                console.log(error)
+                this.errored = true;
+                this.succeeded = false;
+            });
         }
     }
 }
