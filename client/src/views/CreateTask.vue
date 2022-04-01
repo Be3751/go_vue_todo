@@ -18,10 +18,10 @@
         </v-row>
         <v-row class="mt-7 ml-2">
             <div>
-                <h2 v-if="errored">Sorry. Couldn't send the data!</h2>
+                <h2 v-if="errored">Sorry. Couldn't create the task!</h2>
             </div>
             <div>
-                <h2 v-if="succeeded">Successful to send the data!</h2>
+                <h2 v-if="succeeded">Successful to create the task!</h2>
             </div>
         </v-row>
     </v-container>
