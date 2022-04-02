@@ -25,12 +25,12 @@ const routes = [
     component: ReadTask 
   },
   {
-    path: '/update',
+    path: '/update/:id',
     name: 'update',
     component: UpdateTask 
   },
   {
-    path: '/delete',
+    path: '/delete/:id',
     name: 'delete',
     component: DeleteTask 
   }
