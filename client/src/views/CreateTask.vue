@@ -10,7 +10,7 @@
                         <v-col cols="12" md="12">
                             <v-text-field v-model="content" :rules="[required, limit_length]" label="something to do" counter=50></v-text-field>
                         </v-col>
-                        <v-btn class="mr-4" :disabled="invalid" v-on:click="submit">submit</v-btn>
+                        <v-btn class="mr-4" v-on:click="submit">submit</v-btn>
                         <v-btn v-on:click="clear">clear</v-btn>
                     </v-row>
                 </v-container>
