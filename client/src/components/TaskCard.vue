@@ -23,7 +23,7 @@ export default {
             this.$router.push({name: "update", params: {id: this.task.id}}) // パラメータidを指定してupdate/:idに遷移
         },
         toDelete() {
-            this.$router.push({name: "delete", params: {id: this.task.id}}) // パラメータidを指定してdelete/:idに遷移
+            this.$router.push({name: "delete", params: {id: this.task.id, content: this.task.content}}) // パラメータidを指定してdelete/:idに遷移
         }
     }
 }
