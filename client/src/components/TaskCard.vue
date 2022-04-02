@@ -3,8 +3,8 @@
         <v-card-title>{{ task.content }}</v-card-title>
         <v-card-actions>
             <v-btn to="/read" outlined rounded text color="orange">Detail</v-btn>
-            <v-btn to="/update" outlined rounded text color="green">Update</v-btn>
-            <v-btn to="/delete" outlined rounded text color="red">Delete</v-btn>
+            <v-btn v-on:click="toUpdate" outlined rounded text color="green">Update</v-btn>
+            <v-btn v-on:click="toDelete" outlined rounded text color="red">Delete</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -15,7 +15,15 @@ export default {
     props: ["task"],
     data: function() {
         return {
-
+            
+        }
+    },
+    methods: {
+        toUpdate() {
+            this.$router.push({name: "update", params: {id: this.task.id}}) // パラメータidを指定してupdate/:idに遷移
+        },
+        toDelete() {
+            this.$router.push({name: "delete", params: {id: this.task.id}}) // パラメータidを指定してdelete/:idに遷移
         }
     }
 }
