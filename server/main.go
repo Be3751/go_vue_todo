@@ -5,22 +5,42 @@ import (
 
 	"github.com/be3/go_vue_todo/server/controller"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	router := gin.Default()
 
-	router.Use(Cors()) // CORSの設定
+	// CORSの設定
+	router.Use(Cors())
 
-	router.GET("/list", controller.TaskList)
-	router.POST("/create", controller.CreateTask)
-	router.GET("/read/:id", controller.ReadTask)
-	router.PUT("/update/:id", controller.UpdateTask)
-	router.DELETE("/delete/:id", controller.DeleteTask)
+	// クッキーに認証キーを作成
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
+
+	router.POST("/signup", controller.SignUp)
+	router.POST("/login", controller.Login)
+	router.GET("/logout", controller.Logout)
+	// authUserGroup := router.Group("/auth", LoginCheck())
+	// {
+	// 	authUserGroup.GET("/list", controller.TaskList)
+	// 	authUserGroup.POST("/create", controller.CreateTask)
+	// 	authUserGroup.GET("/read/:id", controller.ReadTask)
+	// 	authUserGroup.PUT("/update/:id", controller.UpdateTask)
+	// 	authUserGroup.DELETE("/delete/:id", controller.DeleteTask)
+	// }
 
 	router.Run(":3000")
 }
+
+// func LoginCheck() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		session := sessions.Default(c)
+
+// 	}
+// }
 
 func Cors() gin.HandlerFunc {
 	return cors.New(cors.Config{
