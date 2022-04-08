@@ -13,4 +13,7 @@ ADD . /go/src/server
 
 RUN go mod download
 
-CMD ["go", "run", "main.go"]
+# ホットリロード用にairを導入
+RUN go build -o /go/bin/air github.com/cosmtrek/air
+
+CMD ["air", "-c", ".air.toml"]
