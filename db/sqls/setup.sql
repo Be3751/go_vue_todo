@@ -7,5 +7,5 @@ create table tasks (
 
 create table users (
     id serial primary key,
-    enc_pwd char(10)
+    enc_pwd varchar(256) not null
 )

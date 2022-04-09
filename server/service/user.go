@@ -13,14 +13,9 @@ type UserService struct{}
 func (UserService) AddUser(id string, pwd string) error {
 	fmt.Println("AddUser")
 
-	var user model.User
-
-	fmt.Println(id)
-	fmt.Println(pwd)
-
 	// 既にユーザが登録済みかを確認
+	var user model.User
 	_ = Db.QueryRow("select id from users where id = ?", id).Scan(&user.Id)
-	fmt.Println(user.Id)
 	if user.Id != "" {
 		err := errors.New("This id is already in use.")
 		fmt.Println(err)
@@ -37,13 +32,38 @@ func (UserService) AddUser(id string, pwd string) error {
 	// ユーザの新規登録
 	user = model.User{Id: id, Password: encPwd}
 	stmt, err := Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
-	if err == nil {
+	if err != nil {
+		fmt.Println("Prepare error")
 		return err
 	}
 	defer stmt.Close()
-	stmt.Exec(user.Id, user.Password)
-
+	fmt.Println(user)
+	_, err = stmt.Exec(user.Id, user.Password)
+	if err != nil {
+		fmt.Println("Exec error")
+		return err
+	}
 	return nil
+}
+
+// DBにユーザ情報を追加できているかを確認するための確認用メソッド
+func (UserService) GetUsers() ([]model.User, error) {
+	fmt.Println("GetUsers")
+
+	var users []model.User
+
+	if rows, err := Db.Query("select id from users"); err == nil {
+		for rows.Next() {
+			user := model.User{}
+			if err = rows.Scan(&user.Id); err != nil {
+				return nil, err
+			}
+			fmt.Println(user)
+			users = append(users, user)
+		}
+		rows.Close()
+	}
+	return users, nil
 }
 
 func (UserService) GetUserById(id string) (model.User, error) {
