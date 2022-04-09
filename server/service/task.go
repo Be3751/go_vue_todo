@@ -24,7 +24,6 @@ func (TaskService) GetTaskList() ([]model.Task, error) {
 			return nil, err
 		}
 		tasks = append(tasks, task)
-		fmt.Println(task)
 	}
 	rows.Close()
 
