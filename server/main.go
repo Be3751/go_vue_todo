@@ -23,6 +23,7 @@ func main() {
 	router.POST("/signup", controller.SignUp)
 	router.POST("/login", controller.Login)
 	router.GET("/logout", controller.Logout)
+	router.GET("/users", controller.UserList)
 	// authUserGroup := router.Group("/auth", LoginCheck())
 	// {
 	// 	authUserGroup.GET("/list", controller.TaskList)
