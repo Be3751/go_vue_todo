@@ -11,10 +11,23 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// DBにユーザ情報を追加できているかを確認するための確認用ハンドラー
+func UserList(c *gin.Context) {
+	fmt.Println("/users")
+
+	var userService service.UserService
+	var users []model.User
+	users, err := userService.GetUsers()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+	c.JSON(http.StatusOK, users)
+}
+
 func SignUp(c *gin.Context) {
 	fmt.Println("/signup")
 
-	// リクエストからid, passwordを取得
+	// リクエストからフォームのid, passwordの値を取得
 	id := c.PostForm("id")
 	pwd := c.PostForm("pwd")
 
