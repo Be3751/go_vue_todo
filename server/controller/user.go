@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/be3/go_vue_todo/server/crypto"
 	"github.com/be3/go_vue_todo/server/model"
 	"github.com/be3/go_vue_todo/server/service"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // DBにユーザ情報を追加できているかを確認するための確認用ハンドラー
@@ -44,22 +44,24 @@ func SignUp(c *gin.Context) {
 func Login(c *gin.Context) {
 	fmt.Println("/login")
 
-	var loginRequest model.User
-	err := c.BindJSON(&loginRequest) // リクエストからログイン情報の取得
+	// リクエストからフォームのid, passwordの値を取得
+	id := c.PostForm("id")
+	pwd := c.PostForm("pwd")
+
+	var userService service.UserService
+	user, err := userService.GetUserById(id) // idでユーザ情報の取得
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		c.String(http.StatusBadRequest, "No such a user.")
+	}
+
+	// DBに格納されたハッシュ値とハッシュ化したパスワードの比較
+	if err = crypto.CompHashAndPwd(user.Password, pwd); err != nil {
+		c.String(http.StatusBadRequest, "Invalid password.")
 	} else {
-		var userService service.UserService
-		user, err := userService.GetUserById(loginRequest.Id)                                     // idでユーザ情報の取得
-		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password)) // ハッシュ化したパスワードの比較
-		if err != nil {
-			c.Status(http.StatusBadRequest)
-		} else {
-			session := sessions.Default(c)     // セッションの取得
-			session.Set("id", loginRequest.Id) // ユーザIDの取得
-			session.Save()
-			c.String(http.StatusOK, "Successful to login!")
-		}
+		session := sessions.Default(c) // セッション情報の作成
+		session.Set("id", id)          // ユーザIDの
+		session.Save()
+		c.String(http.StatusOK, "Successful to login!")
 	}
 }
 
