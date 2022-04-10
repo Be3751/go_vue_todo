@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/be3/go_vue_todo/server/controller"
@@ -24,25 +26,35 @@ func main() {
 	router.POST("/login", controller.Login)
 	router.GET("/logout", controller.Logout)
 	router.GET("/users", controller.UserList)
-	// authUserGroup := router.Group("/auth", LoginCheck())
-	// {
-	// 	authUserGroup.GET("/list", controller.TaskList)
-	// 	authUserGroup.POST("/create", controller.CreateTask)
-	// 	authUserGroup.GET("/read/:id", controller.ReadTask)
-	// 	authUserGroup.PUT("/update/:id", controller.UpdateTask)
-	// 	authUserGroup.DELETE("/delete/:id", controller.DeleteTask)
-	// }
+
+	// 以下のハンドラーは認証時のみ利用可能
+	authUserGroup := router.Group("/auth", Authenticate())
+	{
+		authUserGroup.GET("/list", controller.TaskList)
+		authUserGroup.POST("/create", controller.CreateTask)
+		authUserGroup.GET("/read/:id", controller.ReadTask)
+		authUserGroup.PUT("/update/:id", controller.UpdateTask)
+		authUserGroup.DELETE("/delete/:id", controller.DeleteTask)
+	}
 
 	router.Run(":3000")
 }
 
-// func LoginCheck() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		session := sessions.Default(c)
+// 認証用ミドルウェア
+func Authenticate() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		if userId := session.Get("userId"); userId == nil {
+			fmt.Println("You are not logged in.")
+			c.Redirect(http.StatusMovedPermanently, "/login")
+			c.Abort()
+		} else {
+			c.Next()
+		}
+	}
+}
 
-// 	}
-// }
-
+// CORS設定用ミドルウェア
 func Cors() gin.HandlerFunc {
 	return cors.New(cors.Config{
 		// アクセスを許可したいアクセス元
