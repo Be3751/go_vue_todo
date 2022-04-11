@@ -11,11 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var userService service.UserService
+
 // DBにユーザ情報を追加できているかを確認するための確認用ハンドラー
 func UserList(c *gin.Context) {
 	fmt.Println("/users")
 
-	var userService service.UserService
 	var users []model.User
 	users, err := userService.GetUsers()
 	if err != nil {
@@ -32,13 +33,12 @@ func SignUp(c *gin.Context) {
 	pwd := c.PostForm("pwd")
 
 	// ユーザの新規登録
-	var userService service.UserService
 	err := userService.AddUser(id, pwd)
 	if err != nil {
 		c.Status(http.StatusConflict)
 		return
 	}
-	c.Status(http.StatusOK)
+	c.String(http.StatusOK, "Successful to signup!")
 }
 
 func Login(c *gin.Context) {
@@ -48,7 +48,6 @@ func Login(c *gin.Context) {
 	id := c.PostForm("id")
 	pwd := c.PostForm("pwd")
 
-	var userService service.UserService
 	user, err := userService.GetUserById(id) // idでユーザ情報の取得
 	if err != nil {
 		c.String(http.StatusBadRequest, "No such a user.")
@@ -58,16 +57,21 @@ func Login(c *gin.Context) {
 	if err = crypto.CompHashAndPwd(user.Password, pwd); err != nil {
 		c.String(http.StatusBadRequest, "Invalid password.")
 	} else {
+		// セッション情報の作成
+		sessUuid, err := userService.CreateSession(id)
+		if err != nil {
+			c.String(http.StatusBadRequest, "Counldn't create a session.\n")
+			return
+		}
 		session := sessions.Default(c) // セッション情報の作成
-		session.Set("id", id)          // ユーザIDの
+		session.Set("uuid", sessUuid)  // クッキーにUUIDの付与
 		session.Save()
-		c.String(http.StatusOK, "Successful to login!")
+		c.String(http.StatusOK, "Successful to login!\n")
 	}
 }
 
 func Logout(c *gin.Context) {
 	fmt.Println("/logout")
-
 	session := sessions.Default(c) // セッションの取得
 	session.Clear()                // セッションの破棄
 	session.Save()

@@ -7,11 +7,11 @@ create table tasks (
 
 create table users (
     id serial primary key,
-    uuid varchar(64) not null unique,
+    -- uuid varchar(64) unique,
     enc_pwd varchar(255) not null
-)
+);
 
-create table sessions (
+create table sess (
     id serial primary key,
     uuid varchar(64) not null unique
-)
+);

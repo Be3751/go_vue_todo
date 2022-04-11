@@ -36,7 +36,8 @@ func (UserService) AddUser(id string, pwd string) error {
 	user = model.User{Id: int_id, Password: encPwd}
 	stmt, err := Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
 	if err != nil {
-		fmt.Println("Prepare error")
+		fmt.Println("Insert error")
+		fmt.Println(err)
 		return err
 	}
 	defer stmt.Close()
@@ -73,7 +74,7 @@ func (UserService) GetUserById(id string) (model.User, error) {
 	fmt.Println("GetUserById")
 
 	var user model.User
-	err := Db.QueryRow("select * from users where id = ?", id).Scan(&user.Id, &user.Password)
+	err := Db.QueryRow("select id, enc_pwd from users where id = ?", id).Scan(&user.Id, &user.Password)
 	if err != nil {
 		fmt.Println("Select error")
 		return user, err
@@ -82,15 +83,20 @@ func (UserService) GetUserById(id string) (model.User, error) {
 }
 
 // 既存ユーザに対応したセッションを作成
-func (UserService) CreateSession(id string) (session model.Session, err error) {
-	stmt, err := Db.Prepare("insert into sessions (id, uuid) values (?, ?)")
+func (UserService) CreateSession(id string) (sessUuid uuid.UUID, err error) {
+	stmt, err := Db.Prepare("insert into sess (id, uuid) values (?, ?)")
 	if err != nil {
+		fmt.Println("Prepare error")
 		return
 	}
 	defer Db.Close()
 
-	uuid := uuid.New()
-	err = stmt.QueryRow(id, uuid.String()).Scan(&session.Id, &session.Uuid)
+	sessUuid = uuid.New()
+	_, err = stmt.Exec(id, sessUuid.String())
+	if err != nil {
+		fmt.Println("Exec error")
+		return
+	}
 	return
 }
 

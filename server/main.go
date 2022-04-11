@@ -20,7 +20,7 @@ func main() {
 
 	// クッキーに認証キーを作成
 	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("mysession", store))
+	router.Use(sessions.Sessions("yourkey", store))
 
 	router.POST("/signup", controller.SignUp)
 	router.POST("/login", controller.Login)
@@ -44,7 +44,7 @@ func main() {
 func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		if userId := session.Get("userId"); userId == nil {
+		if userId := session.Get("uuid"); userId == nil {
 			fmt.Println("You are not logged in.")
 			c.Redirect(http.StatusMovedPermanently, "/login")
 			c.Abort()
