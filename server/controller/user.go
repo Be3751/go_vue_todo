@@ -64,7 +64,7 @@ func Login(c *gin.Context) {
 			return
 		}
 		session := sessions.Default(c) // セッション情報の作成
-		session.Set("uuid", sessUuid)  // クッキーにUUIDの付与
+		session.Set("uuid", sessUuid)  // クッキーにUUIDの付与=セッションクッキーの生成
 		session.Save()
 		c.String(http.StatusOK, "Successful to login!\n")
 	}
@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 
 func Logout(c *gin.Context) {
 	fmt.Println("/logout")
-	session := sessions.Default(c) // セッションの取得
+	session := sessions.Default(c) // クライアントに紐付いたセッションの取得
 	session.Clear()                // セッションの破棄
 	session.Save()
 	c.String(http.StatusOK, "Successful to logout!")

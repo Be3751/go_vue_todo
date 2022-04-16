@@ -25,9 +25,9 @@ func main() {
 	router.POST("/signup", controller.SignUp)
 	router.POST("/login", controller.Login)
 	router.GET("/logout", controller.Logout)
-	router.GET("/users", controller.UserList)
+	router.GET("/users", controller.UserList) // 登録済みユーザの確認用ハンドラ（開発時のみ使用）
 
-	// 以下のハンドラーは認証時のみ利用可能
+	// ミドルウェアによる認証時のみ利用可能なハンドラ
 	authUserGroup := router.Group("/auth", Authenticate())
 	{
 		authUserGroup.GET("/list", controller.TaskList)
@@ -44,12 +44,13 @@ func main() {
 func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
+		// セッション情報を保持しているかを確認
 		if userId := session.Get("uuid"); userId == nil {
 			fmt.Println("You are not logged in.")
-			c.Redirect(http.StatusMovedPermanently, "/login")
-			c.Abort()
+			c.Redirect(http.StatusMovedPermanently, "/login") // ログイン画面にリダイレクト
+			c.Abort()                                         // ハンドラの次処理を中断
 		} else {
-			c.Next()
+			c.Next() // 次のハンドラに処理を移行
 		}
 	}
 }
