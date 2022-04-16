@@ -1,6 +1,12 @@
 package model
 
 type User struct {
-	Id       string `json:"id"`
-	Password string `json:"pwd"`
+	Id       int
+	Uuid     string
+	Password string
+}
+
+type Session struct {
+	Id   int
+	Uuid string
 }

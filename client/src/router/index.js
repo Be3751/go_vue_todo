@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Signup from '@/views/SignUp.vue'
+import Login from '@/views/LogIn.vue'
+import Logout from '@/views/LogOut.vue'
 import TaskList from '@/views/TaskList.vue'
 import CreateTask from '@/views/CreateTask.vue'
 import ReadTask from '@/views/ReadTask.vue'
@@ -9,6 +12,21 @@ import DeleteTask from '@/views/DeleteTask.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/signup',
+    name: 'signup',
+    component: Signup
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: Logout
+  },
   {
     path: '/',
     name: 'list',

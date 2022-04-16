@@ -3,9 +3,11 @@ package service
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/be3/go_vue_todo/server/crypto"
 	"github.com/be3/go_vue_todo/server/model"
+	"github.com/google/uuid"
 )
 
 type UserService struct{}
@@ -16,7 +18,7 @@ func (UserService) AddUser(id string, pwd string) error {
 	// 既にユーザが登録済みかを確認
 	var user model.User
 	_ = Db.QueryRow("select id from users where id = ?", id).Scan(&user.Id)
-	if user.Id != "" {
+	if user.Id != 0 {
 		err := errors.New("This id is already in use.")
 		fmt.Println(err)
 		return err
@@ -30,10 +32,12 @@ func (UserService) AddUser(id string, pwd string) error {
 	}
 
 	// ユーザの新規登録
-	user = model.User{Id: id, Password: encPwd}
+	int_id, _ := strconv.Atoi(id)
+	user = model.User{Id: int_id, Password: encPwd}
 	stmt, err := Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
 	if err != nil {
-		fmt.Println("Prepare error")
+		fmt.Println("Insert error")
+		fmt.Println(err)
 		return err
 	}
 	defer stmt.Close()
@@ -70,10 +74,33 @@ func (UserService) GetUserById(id string) (model.User, error) {
 	fmt.Println("GetUserById")
 
 	var user model.User
-	err := Db.QueryRow("select * from users where id = ?", id).Scan(&user.Id, &user.Password)
+	err := Db.QueryRow("select id, enc_pwd from users where id = ?", id).Scan(&user.Id, &user.Password)
 	if err != nil {
 		fmt.Println("Select error")
 		return user, err
 	}
 	return user, nil
+}
+
+// 既存ユーザに対応したセッションを作成
+func (UserService) CreateSession(id string) (sessUuid uuid.UUID, err error) {
+	stmt, err := Db.Prepare("insert into sess (id, uuid) values (?, ?)")
+	if err != nil {
+		fmt.Println("Prepare error")
+		return
+	}
+	defer Db.Close()
+
+	sessUuid = uuid.New()
+	_, err = stmt.Exec(id, sessUuid.String())
+	if err != nil {
+		fmt.Println("Exec error")
+		return
+	}
+	return
+}
+
+// 既存ユーザに対応したセッションを取得
+func (UserService) GetSession(model.Session, error) {
+
 }
