@@ -51,7 +51,7 @@ export default {
             this.$refs.create_form.reset();
         },
         createTask(content) {
-            axios.post("http://localhost:3000/create", {
+            axios.post("http://localhost:3000/auth/create", {
                 content: content
             })
             .then(response => {

@@ -51,7 +51,7 @@ export default {
             this.$refs.update_form.reset();
         },
         createTask(content) {
-            axios.put("http://localhost:3000/update/"+this.$route.params.id, {
+            axios.put("http://localhost:3000/auth/update/"+this.$route.params.id, {
                 content: content
             })
             .then(response => {
