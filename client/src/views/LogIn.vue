@@ -63,9 +63,10 @@ export default {
             const params = new URLSearchParams();
             params.append("id", id);
             params.append("pwd", pwd);
-            axios.post("http://localhost:3000/login", params)
+            axios.post("http://localhost:3000/login", params, {withCredentials:true}) // 異なるオリジンにアクセスする場合はwithCredentialsをtrueにする
             .then(response => {
                 this.info = response.bpi;
+                console.log(response.headers["set-cookie"]);
                 this.succeeded = true;
             })
             .catch(error => {

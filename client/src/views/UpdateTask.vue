@@ -53,6 +53,9 @@ export default {
         createTask(content) {
             axios.put("http://localhost:3000/auth/update/"+this.$route.params.id, {
                 content: content
+            },
+            {
+                withCredentials: true
             })
             .then(response => {
                 this.info = response.bpi;

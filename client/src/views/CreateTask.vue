@@ -51,15 +51,13 @@ export default {
             this.$refs.create_form.reset();
         },
         createTask(content) {
-            axios.post("http://localhost:3000/auth/create", {
-                content: content
-            })
+            axios.post("http://localhost:3000/auth/create", {content: content},{withCredentials: true})
             .then(response => {
                 this.info = response.bpi;
                 this.succeeded = true;
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
                 this.errored = true;
                 this.succeeded = false;
             });
