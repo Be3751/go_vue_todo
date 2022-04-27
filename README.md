@@ -16,6 +16,6 @@ Docker環境上で以下3つに対応したコンテナを用意し、docker-com
 
 # 使用方法
 起動：
-docker-compose up -d --build  
+`docker-compose up -d --build`  
 停止：
-docker-compose down
+`docker-compose down`  
