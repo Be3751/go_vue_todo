@@ -9,6 +9,7 @@ import (
 )
 
 var Db *sql.DB
+var Stmt *sql.Stmt
 
 func init() {
 	// user := os.Getenv("MYSQL_USER")
@@ -19,7 +20,6 @@ func init() {
 	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", user, pass, host, port, dbname)
 
 	dsn := "root:root@tcp(db:3306)/todo?charset=utf8"
-	// dsn := "be3:password@tcp(db:3306)/todo_db"
 	var err error
 	Db, err = sql.Open("mysql", dsn)
 	if err != nil {
