@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/be3/go_vue_todo/server/model"
@@ -16,6 +17,8 @@ func (TaskService) GetTaskList() ([]model.Task, error) {
 	rows, err := Db.Query("select id, content from tasks")
 	if err != nil {
 		fmt.Println("Select error")
+		fmt.Println(err)
+		return nil, err
 	}
 	for rows.Next() {
 		task := model.Task{}
@@ -44,15 +47,15 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 func (TaskService) AddTask(task *model.Task) (err error) {
 	fmt.Println("SetTask")
 
-	stmt, err := Db.Prepare("insert into tasks (content) values (?)")
+	Stmt, err = Db.Prepare("insert into tasks(content) value(?)")
 	if err != nil {
-		fmt.Println("Prepare error")
+		log.Fatal(err)
 	}
-	result, err := stmt.Exec(task.Content)
+	result, err := Stmt.Exec(task.Content)
 	if err != nil {
-		fmt.Println("Exec error")
+		log.Fatal(err)
 	}
-	defer stmt.Close()
+	defer Stmt.Close()
 
 	id, _ := result.LastInsertId()
 	task.Id = int(id)
@@ -64,12 +67,12 @@ func (TaskService) AddTask(task *model.Task) (err error) {
 func (TaskService) ChangeTaskById(id string, task *model.Task) (err error) {
 	fmt.Println("ChangeTask")
 
-	stmt, err := Db.Prepare("update tasks set content = ? where id = ?")
+	Stmt, err = Db.Prepare("update tasks set content = ? where id = ?")
 	if err != nil {
 		fmt.Println("Prepare error")
 		return
 	}
-	_, err = stmt.Exec(task.Content, id)
+	_, err = Stmt.Exec(task.Content, id)
 	if err != nil {
 		fmt.Println("Exec error")
 		return
@@ -86,14 +89,14 @@ func (TaskService) ChangeTaskById(id string, task *model.Task) (err error) {
 func (TaskService) DeleteTaskById(id string) (err error) {
 	fmt.Println("DeleteTask")
 
-	stmt, err := Db.Prepare("delete from tasks where id = ?")
+	Stmt, err = Db.Prepare("delete from tasks where id = ?")
 	if err != nil {
 		fmt.Println("Prepare error")
 		return
 	}
-	defer stmt.Close()
+	defer Stmt.Close()
 
-	_, err = stmt.Exec(id)
+	_, err = Stmt.Exec(id)
 	if err != nil {
 		fmt.Println("Exec error")
 		return

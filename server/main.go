@@ -20,7 +20,8 @@ func main() {
 
 	// クッキーに認証キーを作成
 	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("yourkey", store))
+	store.Options(sessions.Options{MaxAge: 60 * 30})
+	router.Use(sessions.Sessions("mysession", store))
 
 	router.POST("/signup", controller.SignUp)
 	router.POST("/login", controller.Login)
@@ -44,13 +45,17 @@ func main() {
 func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
+		sessionId := session.Get("sessionId") // session.Set(key, val)実行時のkeyを指定
+		fmt.Println(sessionId)
+
 		// セッション情報を保持しているかを確認
-		if userId := session.Get("uuid"); userId == nil {
-			fmt.Println("You are not logged in.")
-			c.Redirect(http.StatusMovedPermanently, "/login") // ログイン画面にリダイレクト
-			c.Abort()                                         // ハンドラの次処理を中断
+		if sessionId == nil {
+			fmt.Println("Couldn't authenticate...")
+			c.Status(http.StatusUnauthorized)
+			c.Abort()
 		} else {
-			c.Next() // 次のハンドラに処理を移行
+			fmt.Println("Successful to authenticate!")
+			c.Next()
 		}
 	}
 }
@@ -58,21 +63,30 @@ func Authenticate() gin.HandlerFunc {
 // CORS設定用ミドルウェア
 func Cors() gin.HandlerFunc {
 	return cors.New(cors.Config{
-		// アクセスを許可したいアクセス元
+		// アクセスを許可したいオリジン
 		AllowOrigins: []string{
-			"http://localhost:8080",
+			"http://localhost:8080", // 今回はフロントエンドアプリケーションのみを指定
 		},
-		// アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+		// 許可したいHTTPリクエストヘッダー
+		AllowHeaders: []string{
+			"Cookie",     // 過去にSet-Cookieヘッダーでブラウザに保存したクッキーをクライアント側からサーバ側へ送信することを許可するヘッダー
+			"Set-Cookie", // サーバ側からクライアント側にクッキーを送信することを許可するヘッダー
+			"Access-Control-Allow-Origin",
+			"Content-Type",
+			"Content-Length",
+			"Accept-Encoding", // クライアント側がサポートしている圧縮（エンコーディング）方式をサーバ側に伝えるためのヘッダー
+			"Authorization",
+			"Access-Control-Allow-Credentials", // Cookie、認証ヘッダー、または TLS クライアント証明書といった資格情報をクライアント側に公開することを許可するヘッダー
+			"Access-Control-Allow-Headers",
+			"Access-Control-Allow-Methods",
+		},
+		// アクセスを許可したいHTTPメソッド
 		AllowMethods: []string{
 			"GET",
 			"POST",
 			"PUT",
 			"DELETE",
 			"OPTIONS",
-		},
-		// 許可したいHTTPリクエストヘッダ
-		AllowHeaders: []string{
-			"*",
 		},
 		// cookieなどの情報を必要とするかどうか
 		AllowCredentials: true,

@@ -34,15 +34,15 @@ func (UserService) AddUser(id string, pwd string) error {
 	// ユーザの新規登録
 	int_id, _ := strconv.Atoi(id)
 	user = model.User{Id: int_id, Password: encPwd}
-	stmt, err := Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
+	Stmt, err = Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
 	if err != nil {
 		fmt.Println("Insert error")
 		fmt.Println(err)
 		return err
 	}
-	defer stmt.Close()
+	defer Stmt.Close()
 	fmt.Println(user)
-	_, err = stmt.Exec(user.Id, user.Password)
+	_, err = Stmt.Exec(user.Id, user.Password)
 	if err != nil {
 		fmt.Println("Exec error")
 		return err
@@ -84,15 +84,15 @@ func (UserService) GetUserById(id string) (model.User, error) {
 
 // 既存ユーザに対応したセッションを作成
 func (UserService) CreateSession(id string) (sessUuid uuid.UUID, err error) {
-	stmt, err := Db.Prepare("insert into sess (id, uuid) values (?, ?)")
+	Stmt, err = Db.Prepare("insert into sess (id, uuid) values (?, ?)")
 	if err != nil {
 		fmt.Println("Prepare error")
 		return
 	}
-	defer Db.Close()
+	defer Stmt.Close()
 
 	sessUuid = uuid.New()
-	_, err = stmt.Exec(id, sessUuid.String())
+	_, err = Stmt.Exec(id, sessUuid.String())
 	if err != nil {
 		fmt.Println("Exec error")
 		return

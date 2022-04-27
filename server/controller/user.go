@@ -55,18 +55,27 @@ func Login(c *gin.Context) {
 
 	// DBに格納されたハッシュ値とハッシュ化したパスワードの比較
 	if err = crypto.CompHashAndPwd(user.Password, pwd); err != nil {
-		c.String(http.StatusBadRequest, "Invalid password.")
+		fmt.Println("Invalid password.")
+		c.Status(http.StatusBadRequest)
+		return
 	} else {
 		// セッション情報の作成
 		sessUuid, err := userService.CreateSession(id)
 		if err != nil {
-			c.String(http.StatusBadRequest, "Counldn't create a session.\n")
+			fmt.Println("Counldn't create a session.")
+			c.Status(http.StatusBadRequest)
 			return
 		}
-		session := sessions.Default(c) // セッション情報の作成
-		session.Set("uuid", sessUuid)  // クッキーにUUIDの付与=セッションクッキーの生成
-		session.Save()
-		c.String(http.StatusOK, "Successful to login!\n")
+		session := sessions.Default(c)              // セッション情報の作成
+		session.Set("sessionId", sessUuid.String()) // セッションIDをクッキーに保存=セッションクッキーの生成
+		if err := session.Save(); err != nil {
+			fmt.Println("Counldn't save a session.")
+			fmt.Println(err)
+			c.Status(http.StatusBadRequest)
+			return
+		}
+		fmt.Println("Successful to login!")
+		c.JSON(http.StatusOK, gin.H{"sessionId": sessUuid.String()})
 	}
 }
 
