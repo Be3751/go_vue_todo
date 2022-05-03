@@ -66,8 +66,9 @@ export default {
             axios.post("http://localhost:3000/login", params, {withCredentials:true}) // 異なるオリジンにアクセスする場合はwithCredentialsをtrueにする
             .then(response => {
                 this.info = response.bpi;
-                console.log(response.headers["set-cookie"]);
                 this.succeeded = true;
+                this.$router.push({name: "list"});
+                this.$router.go({path: this.$router.currentRoute.path, force: true}) // 遷移後にリロードを行うことでAPIにリクエスト
             })
             .catch(error => {
                 console.log(error)

@@ -29,13 +29,18 @@ export default {
         logout() {
             const sessionKeyName = "mysession"
             if(this.$cookies.isKey(sessionKeyName)) {
-                this.$cookies.remove(sessionKeyName);
                 console.log("removed session cookie.");
-                this.succeeded = true;
+                this.$cookies.remove(sessionKeyName);
+                this.$router.push({name: "signup"});
+                this.$router.go({path: this.$router.currentRoute.path, force: true}); // 遷移後にリロードを行うことでAPIにリクエスト
             } else {
                 console.log("no cookie.");
                 this.errored = true;
             }
+        },
+        cancel() {
+            console.log("canceled to jump to list page.");
+            this.$router.push({name: "list"});
         }
     }
 }
