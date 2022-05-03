@@ -24,7 +24,7 @@ export default {
     tasks: []
   }),
   async mounted() {
-    await axios.get('http://localhost:3000/auth/list', {withCredentials: true})
+    await axios.get('http://localhost:3000/auth/tasks', {withCredentials: true})
     .then(response => {
         this.tasks = response.data;
     })
