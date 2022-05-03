@@ -6,17 +6,21 @@
       <v-icon dark>mdi-format-list-bulleted-square</v-icon>
       View task list
     </v-btn>
-    <v-btn v-else to="/login" class="ma-2" color="teal accent-3">
-      <v-icon dark>mdi-format-list-bulleted-square</v-icon>
-      Login
+    <v-btn v-else to="/" class="ma-2" color="teal accent-3">
+      <v-icon dark>mdi-clipboard-account-outline</v-icon>
+      Signup
     </v-btn>
     <v-btn v-if="sessioned" to="/create" class="ma-2" color="teal accent-3">
       <v-icon dark>mdi-pencil</v-icon>
       Create task
     </v-btn>
     <v-btn v-if="sessioned" to="/logout" class="ma-2" color="teal accent-3">
-      <v-icon dark>mdi-pencil</v-icon>
+      <v-icon dark>mdi-logout-variant</v-icon>
       Logout
+    </v-btn>
+    <v-btn v-else to="/login" class="ma-2" color="teal accent-3">
+      <v-icon dark>mdi-login-variant</v-icon>
+      Login
     </v-btn>
   </v-app-bar>
 </template>
