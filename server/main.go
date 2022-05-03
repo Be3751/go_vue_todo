@@ -20,11 +20,11 @@ func main() {
 	// ミドルウェアによる認証時のみ利用可能なハンドラ
 	authUserGroup := router.Group("/auth", middleware.Authenticate())
 	{
-		authUserGroup.GET("/list", controller.TaskList)
-		authUserGroup.POST("/create", controller.CreateTask)
-		authUserGroup.GET("/read/:id", controller.ReadTask)
-		authUserGroup.PUT("/update/:id", controller.UpdateTask)
-		authUserGroup.DELETE("/delete/:id", controller.DeleteTask)
+		authUserGroup.GET("/tasks", controller.TaskList)
+		authUserGroup.POST("/tasks", controller.CreateTask)
+		authUserGroup.GET("/tasks/:id", controller.ReadTask)
+		authUserGroup.PUT("/tasks/:id", controller.UpdateTask)
+		authUserGroup.DELETE("/tasks/:id", controller.DeleteTask)
 	}
 
 	router.Run(":3000")

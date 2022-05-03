@@ -52,7 +52,7 @@ export default {
             this.$refs.delete_form.reset();
         },
         deleteTask(id) {
-            axios.delete("http://localhost:3000/auth/delete/"+id, {withCredentials: true})
+            axios.delete("http://localhost:3000/auth/tasks/"+id, {withCredentials: true})
             .then(response => {
                 this.info = response.bpi;
                 this.succeeded = true;
