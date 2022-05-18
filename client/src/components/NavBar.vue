@@ -31,8 +31,8 @@
       sessioned: false
     }),
     mounted() {
-      const sessionId = this.$cookies.get('mysession');
-      if(sessionId != null) {
+      const userStatus = this.$cookies.get('user-status');
+      if(userStatus == 'auth') {
         this.sessioned = true
       }
     }
