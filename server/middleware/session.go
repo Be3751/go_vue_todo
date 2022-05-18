@@ -30,7 +30,7 @@ func Authenticate() gin.HandlerFunc {
 
 // セッションクッキー生成用ミドルウェア
 func SetSessionCookie(authKey string, sessionName string) gin.HandlerFunc {
-	store := cookie.NewStore([]byte(authKey))                                                           // セッションクッキーに認証キーを作成
-	store.Options(sessions.Options{MaxAge: 60 * 30, HttpOnly: true, SameSite: http.SameSiteStrictMode}) // XSS対策にHttpOnly, CSRF対策にSameSite: Strictをを付与
+	store := cookie.NewStore([]byte(authKey)) // クッキーに認証キーを作成
+	store.Options(sessions.Options{MaxAge: 60 * 30})
 	return sessions.Sessions(sessionName, store)
 }

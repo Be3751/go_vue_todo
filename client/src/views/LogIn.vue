@@ -60,7 +60,6 @@ export default {
             this.$refs.create_form.reset();
         },
         requestLogIn(id, pwd) {
-            this.$cookies.set('user-status', 'auth');
             const params = new URLSearchParams();
             params.append("id", id);
             params.append("pwd", pwd);

@@ -27,10 +27,16 @@ export default {
     }),
     methods: {
         logout() {
-            this.$cookies.set('user-status', null);
-            this.$router.push({name: "signup"});
-            this.$router.go({path: this.$router.currentRoute.path, force: true}); // 遷移後にリロードを行うことでAPIにリクエスト
-            this.errored = true;
+            const sessionKeyName = "mysession"
+            if(this.$cookies.isKey(sessionKeyName)) {
+                console.log("removed session cookie.");
+                this.$cookies.remove(sessionKeyName);
+                this.$router.push({name: "signup"});
+                this.$router.go({path: this.$router.currentRoute.path, force: true}); // 遷移後にリロードを行うことでAPIにリクエスト
+            } else {
+                console.log("no cookie.");
+                this.errored = true;
+            }
         },
         cancel() {
             console.log("canceled to jump to list page.");
