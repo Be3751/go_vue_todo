@@ -17,8 +17,8 @@ Vue.use(VueCookies)
 const routes = []
 
 // セッションクッキーの有無でアクセスを制御
-const sessionCookie = Vue.$cookies.get('mysession');
-if(sessionCookie != null) {
+const userStatus = Vue.$cookies.get('user-status');
+if(userStatus == 'auth') {
   console.log('Do you want to have a cookie?'); 
   routes.push(
     {
