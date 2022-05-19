@@ -19,7 +19,7 @@ const routes = []
 // セッションクッキーの有無でアクセスを制御
 const userStatus = Vue.$cookies.get('user-status');
 if(userStatus == 'auth') {
-  console.log('Do you want to have a cookie?'); 
+  console.log('I\'m authorized!'); 
   routes.push(
     {
       path: '/',
@@ -53,7 +53,7 @@ if(userStatus == 'auth') {
     }
   );
 } else {
-  console.log('No cookie!');
+  console.log('I\'m not authorized...'); 
   routes.push({
     path: '/',
     name: 'signup',
