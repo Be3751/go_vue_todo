@@ -36,7 +36,7 @@ export default {
             this.$refs.read_form.reset();
         },
         readTask(id) {
-            axios.read("http://localhost:3000/auth/tasks/"+id, {withCredentials: true})
+            axios.get("http://localhost:3000/auth/tasks/"+id, {withCredentials: true})
             .then(response => {
                 this.info = response.bpi;
                 this.succeeded = true;
