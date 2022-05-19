@@ -14,12 +14,12 @@ func main() {
 
 	router.POST("/signup", controller.SignUp)
 	router.POST("/login", controller.Login)
-	router.GET("/logout", controller.Logout)
 	router.GET("/users", controller.UserList) // 登録済みユーザの確認用ハンドラ（開発時のみ使用）
 
 	// ミドルウェアによる認証時のみ利用可能なハンドラ
 	authUserGroup := router.Group("/auth", middleware.Authenticate())
 	{
+		authUserGroup.GET("/logout", controller.Logout)
 		authUserGroup.GET("/tasks", controller.TaskList)
 		authUserGroup.POST("/tasks", controller.CreateTask)
 		authUserGroup.GET("/tasks/:id", controller.ReadTask)
