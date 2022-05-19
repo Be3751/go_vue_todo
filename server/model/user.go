@@ -1,12 +1,12 @@
 package model
 
 type User struct {
-	Id       int
+	Id       string
 	Uuid     string
 	Password string
 }
 
 type Session struct {
-	Id   int
+	Id   string
 	Uuid string
 }

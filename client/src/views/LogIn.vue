@@ -45,7 +45,6 @@ export default {
         required: value => !!value || "Must include any letter!",
         limit_length: value => value.length >= 8 || "Must include 8 letters or more!",
         // if_matching: value => value !=  || "Not same as password!",
-        info: null,
         errored: false,
         succeeded: false
     }),
@@ -60,16 +59,17 @@ export default {
             this.$refs.create_form.reset();
         },
         requestLogIn(id, pwd) {
-            this.$cookies.set('user-status', 'auth');
             const params = new URLSearchParams();
             params.append("id", id);
             params.append("pwd", pwd);
             axios.post("http://localhost:3000/login", params, {withCredentials:true}) // 異なるオリジンにアクセスする場合はwithCredentialsをtrueにする
             .then(response => {
-                this.info = response.bpi;
-                this.succeeded = true;
-                this.$router.push({name: "list"});
-                this.$router.go({path: this.$router.currentRoute.path, force: true}) // 遷移後にリロードを行うことでAPIにリクエスト
+                if(response.status == 200) {
+                    this.$cookies.set('user-status', 'auth');
+                    this.succeeded = true;
+                    this.$router.push({name: "list"});
+                    this.$router.go({path: this.$router.currentRoute.path, force: true}) // 遷移後にリロードを行うことでAPIにリクエスト
+                }
             })
             .catch(error => {
                 console.log(error)

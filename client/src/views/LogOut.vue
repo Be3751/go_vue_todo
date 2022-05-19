@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
     name: "LogOut",
     data: () => ({
@@ -27,10 +28,20 @@ export default {
     }),
     methods: {
         logout() {
-            this.$cookies.set('user-status', null);
-            this.$router.push({name: "signup"});
-            this.$router.go({path: this.$router.currentRoute.path, force: true}); // 遷移後にリロードを行うことでAPIにリクエスト
-            this.errored = true;
+            axios.get("http://localhost:3000/auth/logout", {withCredentials: true})
+            .then(response => {
+                if(response.status == 200) {
+                    this.$cookies.set('user-status', null);
+                    this.$router.push({name: "signup"});
+                    this.$router.go({path: this.$router.currentRoute.path, force: true}); // 遷移後にリロードを行うことでAPIにリクエスト
+                    this.errored = true;
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                this.errored = true;
+                this.succeeded = false;
+            });
         },
         cancel() {
             console.log("canceled to jump to list page.");

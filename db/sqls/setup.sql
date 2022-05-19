@@ -6,12 +6,12 @@ create table tasks (
 );
 
 create table users (
-    id serial primary key,
+    id text,
     -- uuid varchar(64) unique,
     enc_pwd varchar(255) not null
 );
 
 create table sess (
-    id serial primary key,
+    id text,
     uuid varchar(64) not null unique
 );
