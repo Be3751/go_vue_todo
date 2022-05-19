@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/be3/go_vue_todo/server/crypto"
 	"github.com/be3/go_vue_todo/server/model"
@@ -18,7 +17,7 @@ func (UserService) AddUser(id string, pwd string) error {
 	// 既にユーザが登録済みかを確認
 	var user model.User
 	_ = Db.QueryRow("select id from users where id = ?", id).Scan(&user.Id)
-	if user.Id != 0 {
+	if user.Id != "" {
 		err := errors.New("This id is already in use.")
 		fmt.Println(err)
 		return err
@@ -32,8 +31,7 @@ func (UserService) AddUser(id string, pwd string) error {
 	}
 
 	// ユーザの新規登録
-	int_id, _ := strconv.Atoi(id)
-	user = model.User{Id: int_id, Password: encPwd}
+	user = model.User{Id: id, Password: encPwd}
 	Stmt, err = Db.Prepare("insert into users (id, enc_pwd) values (?, ?)")
 	if err != nil {
 		fmt.Println("Insert error")
