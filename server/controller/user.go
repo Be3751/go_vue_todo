@@ -81,8 +81,9 @@ func Login(c *gin.Context) {
 
 func Logout(c *gin.Context) {
 	fmt.Println("/logout")
-	session := sessions.Default(c) // クライアントに紐付いたセッションの取得
-	session.Clear()                // セッションの破棄
+	session := sessions.Default(c)                // クライアントに紐付いたセッションの取得
+	session.Clear()                               // セッションの破棄
+	session.Options(sessions.Options{MaxAge: -1}) // MaxAgeが負の値である場合、即座にセッションクッキーを削除
 	session.Save()
 	c.String(http.StatusOK, "Successful to logout!")
 }
