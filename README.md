@@ -1,8 +1,9 @@
 # go_vue_todo
-Gin, Vue.js, MySQLによるToDoアプリ
-Web APIを介してマイクロサービス間を疎結合に連携させ、セッションを用いた認証機能やXSS・CSRF対策を実装
-XSS対策：Set-CookieヘッダにHttpOnly属性を付与し、JavaScriptからのクッキーへのアクセスを禁止
-CSRF対策：Set-CookieヘッダにSameSite属性のStrictを付与し、異なるドメインにあるホストとのクッキーの送受信を禁止
+Gin, Vue.js, MySQLによるToDoアプリ  
+Web APIを介してマイクロサービス間を疎結合に連携させ、セッションを用いた認証機能やXSS・CSRF対策を実装  
+
+ - XSS対策：Set-CookieヘッダにHttpOnly属性を付与し、JavaScriptからのクッキーへのアクセスを禁止  
+ - CSRF対策：Set-CookieヘッダにSameSite属性のStrictを付与し、異なるドメインにあるホストとのクッキーの送受信を禁止  
 
 # 使用技術
 Docker環境上で以下3つに対応したコンテナを用意し、docker-composeでスタック
