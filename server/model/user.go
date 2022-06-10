@@ -2,8 +2,9 @@ package model
 
 type User struct {
 	Id       string
-	Uuid     string
 	Password string
+	Uuid     string
+	Tasks    []Task
 }
 
 type Session struct {

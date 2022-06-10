@@ -1,17 +1,19 @@
 -- drop table tasks if exists;
 
-create table tasks (
-    id serial primary key,
-    content text
-);
-
 create table users (
-    id text,
+    id varchar(128) primary key,
     -- uuid varchar(64) unique,
     enc_pwd varchar(255) not null
 );
 
+create table tasks (
+    id int primary key,
+    content text,
+    user_id int,
+    foreign key (user_id) references users(id) 
+);
+
 create table sess (
-    id text,
+    id int primary key,
     uuid varchar(64) not null unique
 );

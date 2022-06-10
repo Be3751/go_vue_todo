@@ -47,11 +47,11 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 func (TaskService) AddTask(task *model.Task) (err error) {
 	fmt.Println("SetTask")
 
-	Stmt, err = Db.Prepare("insert into tasks(content) value(?)")
+	Stmt, err = Db.Prepare("insert into tasks(content, user_id) value(?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	result, err := Stmt.Exec(task.Content)
+	result, err := Stmt.Exec(task.Content, task.User.Id)
 	if err != nil {
 		log.Fatal(err)
 	}
