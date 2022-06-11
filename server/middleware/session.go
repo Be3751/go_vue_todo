@@ -13,7 +13,7 @@ import (
 func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		sessionId := session.Get("sessionId") // session.Set(key, val)実行時のkeyを指定
+		sessionId := session.Get("SessionId") // session.Set(key, val)実行時のkeyを指定
 		fmt.Println(sessionId)
 
 		// セッション情報を保持しているかを確認

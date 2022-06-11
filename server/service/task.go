@@ -10,16 +10,19 @@ import (
 
 type TaskService struct{}
 
-func (TaskService) GetTaskList() ([]model.Task, error) {
+func (TaskService) GetTaskList(userId string) ([]model.Task, error) {
 	fmt.Println("GetTaskList")
 
-	var tasks []model.Task
-	rows, err := Db.Query("select id, content from tasks")
+	stmt := "select id, content from tasks where user_id = " + userId
+	fmt.Println(stmt)
+	rows, err := Db.Query(stmt)
 	if err != nil {
 		fmt.Println("Select error")
 		fmt.Println(err)
 		return nil, err
 	}
+
+	var tasks []model.Task
 	for rows.Next() {
 		task := model.Task{}
 		err = rows.Scan(&task.Id, &task.Content)
@@ -45,13 +48,13 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 }
 
 func (TaskService) AddTask(task *model.Task) (err error) {
-	fmt.Println("SetTask")
+	fmt.Println("AddTask")
 
-	Stmt, err = Db.Prepare("insert into tasks(content) value(?)")
+	Stmt, err = Db.Prepare("insert into tasks(content, user_id) value(?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	result, err := Stmt.Exec(task.Content)
+	result, err := Stmt.Exec(task.Content, task.User.Id)
 	if err != nil {
 		log.Fatal(err)
 	}

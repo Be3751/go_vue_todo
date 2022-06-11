@@ -1,2 +1,4 @@
 .devcontainer
 server/tmp
+db/data
+db/logs

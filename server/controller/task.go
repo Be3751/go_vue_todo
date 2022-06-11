@@ -6,14 +6,24 @@ import (
 
 	"github.com/be3/go_vue_todo/server/model"
 	"github.com/be3/go_vue_todo/server/service"
+
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func TaskList(c *gin.Context) {
-	fmt.Println("GET /list")
+	fmt.Println("POST /tasks")
 
+	session := sessions.Default(c)
+	user, err := getAuthedUser(session)
+	if err != nil {
+		fmt.Println("error")
+		c.String(http.StatusInternalServerError, "Server Error")
+	}
+
+	// ユーザに紐づいたタスクを取得
 	taskService := service.TaskService{}
-	tasks, err := taskService.GetTaskList()
+	tasks, err := taskService.GetTaskList(user.Id)
 	if err != nil {
 		fmt.Println("error")
 		c.String(http.StatusInternalServerError, "Server Error")
@@ -30,6 +40,11 @@ func CreateTask(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Server Error")
 	}
+
+	session := sessions.Default(c)
+	user, err := getAuthedUser(session)
+	task.User = &user
+
 	taskService := service.TaskService{}
 	err = taskService.AddTask(&task)
 	if err != nil {
@@ -88,4 +103,12 @@ func DeleteTask(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "succeeded to delete the post."})
 	}
+}
+
+// セッションからユーザを取得
+func getAuthedUser(session sessions.Session) (model.User, error) {
+	sessId := session.Get("SessionId")
+	userService := service.UserService{}
+	user, err := userService.GetUserBySessionId(sessId.(string))
+	return user, err
 }
