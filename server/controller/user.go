@@ -51,6 +51,7 @@ func Login(c *gin.Context) {
 	user, err := userService.GetUserById(id) // idでユーザ情報の取得
 	if err != nil {
 		c.String(http.StatusBadRequest, "No such a user.")
+		return
 	}
 
 	// DBに格納されたハッシュ値とハッシュ化したパスワードの比較
@@ -60,14 +61,14 @@ func Login(c *gin.Context) {
 		return
 	} else {
 		// セッション情報の作成
-		sessUuid, err := userService.CreateSession(id)
+		sessUuid, err := userService.CreateSession(user.Id)
 		if err != nil {
 			fmt.Println("Counldn't create a session.")
 			c.Status(http.StatusBadRequest)
 			return
 		}
 		session := sessions.Default(c)              // セッション情報の作成
-		session.Set("sessionId", sessUuid.String()) // セッションIDをクッキーに保存=セッションクッキーの生成
+		session.Set("SessionId", sessUuid.String()) // セッションIDをクッキーに保存=セッションクッキーの生成
 		if err := session.Save(); err != nil {
 			fmt.Println("Counldn't save a session.")
 			fmt.Println(err)
@@ -75,7 +76,7 @@ func Login(c *gin.Context) {
 			return
 		}
 		fmt.Println("Successful to login!")
-		c.JSON(http.StatusOK, gin.H{"sessionId": sessUuid.String()})
+		c.Status(http.StatusOK)
 	}
 }
 

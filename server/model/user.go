@@ -6,8 +6,3 @@ type User struct {
 	Uuid     string
 	Tasks    []Task
 }
-
-type Session struct {
-	Id   string
-	Uuid string
-}
