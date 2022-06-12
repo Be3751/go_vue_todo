@@ -28,7 +28,7 @@ export default {
     }),
     methods: {
         logout() {
-            axios.get("http://localhost:3000/auth/logout", {withCredentials: true})
+            axios.get("http://localhost:3000/v1/auth/logout", {withCredentials: true})
             .then(response => {
                 if(response.status == 200) {
                     this.$cookies.set('user-status', null);

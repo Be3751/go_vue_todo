@@ -62,7 +62,7 @@ export default {
             const params = new URLSearchParams();
             params.append("id", id);
             params.append("pwd", pwd);
-            axios.post("http://localhost:3000/login", params, {withCredentials:true}) // 異なるオリジンにアクセスする場合はwithCredentialsをtrueにする
+            axios.post("http://localhost:3000/v1/login", params, {withCredentials:true}) // 異なるオリジンにアクセスする場合はwithCredentialsをtrueにする
             .then(response => {
                 if(response.status == 200) {
                     this.$cookies.set('user-status', 'auth');

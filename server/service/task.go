@@ -14,7 +14,6 @@ func (TaskService) GetTaskList(userId string) ([]model.Task, error) {
 	fmt.Println("GetTaskList")
 
 	stmt := "select id, content from tasks where user_id = " + userId
-	fmt.Println(stmt)
 	rows, err := Db.Query(stmt)
 	if err != nil {
 		fmt.Println("Select error")

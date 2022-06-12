@@ -12,19 +12,22 @@ func main() {
 	router.Use(middleware.Cors())                                  // CORSの設定
 	router.Use(middleware.SetSessionCookie("secret", "mysession")) // クッキーに認証キーを作成
 
-	router.POST("/signup", controller.SignUp)
-	router.POST("/login", controller.Login)
-	router.GET("/users", controller.UserList) // 登録済みユーザの確認用ハンドラ（開発時のみ使用）
-
-	// ミドルウェアによる認証時のみ利用可能なハンドラ
-	authUserGroup := router.Group("/auth", middleware.Authenticate())
+	versionGroup := router.Group("/v1")
 	{
-		authUserGroup.GET("/logout", controller.Logout)
-		authUserGroup.GET("/tasks", controller.TaskList)
-		authUserGroup.POST("/tasks", controller.CreateTask)
-		authUserGroup.GET("/tasks/:id", controller.ReadTask)
-		authUserGroup.PUT("/tasks/:id", controller.UpdateTask)
-		authUserGroup.DELETE("/tasks/:id", controller.DeleteTask)
+		versionGroup.POST("/signup", controller.SignUp)
+		versionGroup.POST("/login", controller.Login)
+		versionGroup.GET("/users", controller.UserList) // 登録済みユーザの確認用ハンドラ（開発時のみ使用）
+
+		// ミドルウェアによる認証時のみ利用可能なハンドラ
+		authUserGroup := versionGroup.Group("/auth", middleware.Authenticate())
+		{
+			authUserGroup.GET("/logout", controller.Logout)
+			authUserGroup.GET("/tasks", controller.TaskList)
+			authUserGroup.POST("/tasks", controller.CreateTask)
+			authUserGroup.GET("/tasks/:id", controller.ReadTask)
+			authUserGroup.PUT("/tasks/:id", controller.UpdateTask)
+			authUserGroup.DELETE("/tasks/:id", controller.DeleteTask)
+		}
 	}
 
 	router.Run(":3000")

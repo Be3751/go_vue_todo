@@ -63,7 +63,7 @@ export default {
             const params = new URLSearchParams();
             params.append("id", id);
             params.append("pwd", pwd);
-            axios.post("http://localhost:3000/signup", params)
+            axios.post("http://localhost:3000/v1/signup", params)
             .then(response => {
                 if(response.status == 200) {
                     this.info = response.bpi;
