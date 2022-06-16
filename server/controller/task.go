@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/be3/go_vue_todo/server/model"
 	"github.com/be3/go_vue_todo/server/service"
@@ -41,6 +42,10 @@ func CreateTask(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Server Error")
 	}
 
+	// 作成時の時刻を格納
+	task.CreatedAt = time.Now()
+
+	// セッション時のユーザをタスクと紐付け
 	session := sessions.Default(c)
 	user, err := getAuthedUser(session)
 	task.User = &user
@@ -82,6 +87,9 @@ func UpdateTask(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 	id := c.Param("id")
+
+	// 更新時の時刻を格納
+	task.UpdatedAt = time.Now()
 
 	taskService := service.TaskService{}
 	err = taskService.ChangeTaskById(id, &task)

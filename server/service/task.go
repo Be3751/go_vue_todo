@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/be3/go_vue_todo/server/model"
+	"github.com/be3/go_vue_todo/server/utils"
 )
 
 type TaskService struct{}
@@ -49,11 +50,13 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 func (TaskService) AddTask(task *model.Task) (err error) {
 	fmt.Println("AddTask")
 
-	Stmt, err = Db.Prepare("insert into tasks(content, user_id) value(?, ?)")
+	Stmt, err = Db.Prepare("insert into tasks(content, user_id, created_at) value(?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	result, err := Stmt.Exec(task.Content, task.User.Id)
+
+	dateCreated := utils.ExtractDate(task.CreatedAt)
+	result, err := Stmt.Exec(task.Content, task.User.Id, dateCreated)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,12 +72,14 @@ func (TaskService) AddTask(task *model.Task) (err error) {
 func (TaskService) ChangeTaskById(id string, task *model.Task) (err error) {
 	fmt.Println("ChangeTask")
 
-	Stmt, err = Db.Prepare("update tasks set content = ? where id = ?")
+	Stmt, err = Db.Prepare("update tasks set content = ?, updated_at = ? where id = ?")
 	if err != nil {
 		fmt.Println("Prepare error")
 		return
 	}
-	_, err = Stmt.Exec(task.Content, id)
+
+	dateUpdated := utils.ExtractDate(task.UpdatedAt)
+	_, err = Stmt.Exec(task.Content, dateUpdated, id)
 	if err != nil {
 		fmt.Println("Exec error")
 		return
