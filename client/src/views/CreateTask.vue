@@ -9,6 +9,13 @@
                     <v-row>
                         <v-col cols="12" md="12">
                             <v-text-field v-model="content" :rules="[required, limit_length]" label="something to do" counter=50></v-text-field>
+                            <v-date-picker
+                                v-model="date"
+                                :allowed-dates="allowedDates"
+                                class="mt-4"
+                                min="2022-04-01"
+                                max="2024-03-31"
+                            ></v-date-picker>
                         </v-col>
                         <v-btn class="mr-4" v-on:click="submit">submit</v-btn>
                         <v-btn v-on:click="clear">clear</v-btn>
@@ -38,30 +45,34 @@ export default {
         limit_length: value => value.length <= 50 || "Must include 50 letters or less!",
         info: null,
         errored: false,
-        succeeded: false
+        succeeded: false,
+        date: '2022-04-01',
     }),
     methods: {
         submit() {
             if(this.$refs.create_form.validate()) {
-                this.createTask(this.content);
+                this.createTask(this.content, this.date);
                 this.$refs.create_form.reset();
             }
         },
         clear() {
             this.$refs.create_form.reset();
         },
-        createTask(content) {
-            axios.post("http://localhost:3000/v1/auth/tasks", {content: content},{withCredentials: true})
+        createTask(content, date) {
+            axios.post("http://localhost:3000/v1/auth/tasks", {content: content, deadline: date},{withCredentials: true})
             .then(response => {
                 this.info = response.bpi;
                 this.succeeded = true;
+                console.log(date);
             })
             .catch(error => {
+                console.log(date);
                 console.log(error);
                 this.errored = true;
                 this.succeeded = false;
             });
-        }
+        },
+        allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
     }
 }
 </script>

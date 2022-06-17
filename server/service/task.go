@@ -50,13 +50,13 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 func (TaskService) AddTask(task *model.Task) (err error) {
 	fmt.Println("AddTask")
 
-	Stmt, err = Db.Prepare("insert into tasks(content, user_id, created_at) value(?, ?, ?)")
+	Stmt, err = Db.Prepare("insert into tasks(content, user_id, deadline, created_at) value(?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	dateCreated := utils.ExtractDate(task.CreatedAt)
-	result, err := Stmt.Exec(task.Content, task.User.Id, dateCreated)
+	result, err := Stmt.Exec(task.Content, task.User.Id, task.Deadline, dateCreated)
 	if err != nil {
 		log.Fatal(err)
 	}
