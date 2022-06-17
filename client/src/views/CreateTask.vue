@@ -59,7 +59,7 @@ export default {
             this.$refs.create_form.reset();
         },
         createTask(content, date) {
-            axios.post("http://localhost:3000/v1/auth/tasks", {content: content, deadline: date},{withCredentials: true})
+            axios.post("http://localhost:3000/v1/auth/tasks", {content: content, deadline: date}, {withCredentials: true})
             .then(response => {
                 this.info = response.bpi;
                 this.succeeded = true;
@@ -72,7 +72,7 @@ export default {
                 this.succeeded = false;
             });
         },
-        allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+        allowedDates: val => parseInt(val.split('-')[2], 10) % 1 === 0,
     }
 }
 </script>

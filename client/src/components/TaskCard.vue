@@ -20,7 +20,7 @@ export default {
     },
     methods: {
         toRead() {
-            this.$router.push({name: "read", params: {id: this.task.id, content: this.task.content}}) // パラメータidを指定してupdate/:idに遷移
+            this.$router.push({name: "read", params: {id: this.task.id, content: this.task.content, deadline: this.task.deadline}}) // パラメータidを指定してupdate/:idに遷移
         },
         toUpdate() {
             this.$router.push({name: "update", params: {id: this.task.id}}) // パラメータidを指定してupdate/:idに遷移

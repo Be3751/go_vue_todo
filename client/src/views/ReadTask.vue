@@ -5,7 +5,8 @@
         </v-row>
         <v-row class="mt-2 ml-2">
             <v-col cols="12" md="12">
-                Task : {{ this.content }}
+                Task : {{ this.content }}<br/>
+                Deadline : {{ this.deadline }}
             </v-col>
         </v-row>
     </v-container>
@@ -19,6 +20,7 @@ export default {
     data: () => ({
         id: "",
         content: "",
+        deadline: "",
         required: value => !!value || "Must include any letter!",
         limit_length: value => value.length <= 50 || "Must include 50 letters or less!",
         info: null,
@@ -26,15 +28,6 @@ export default {
         succeeded: false
     }),
     methods: {
-        submit() {
-            if(this.$refs.read_form.validate()) {
-                this.readTask(this.id);
-                this.$refs.read_form.reset();
-            }
-        },
-        clear() {
-            this.$refs.read_form.reset();
-        },
         readTask(id) {
             axios.get("http://localhost:3000/v1/auth/tasks/"+id, {withCredentials: true})
             .then(response => {
@@ -51,6 +44,7 @@ export default {
     mounted() {
         this.id = this.$route.params.id;
         this.content = this.$route.params.content;
+        this.deadline = this.$route.params.deadline;
     }
 }
 </script>

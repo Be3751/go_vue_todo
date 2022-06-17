@@ -9,6 +9,13 @@
                     <v-row>
                         <v-col cols="12" md="12">
                             <v-text-field v-model="content" :rules="[required, limit_length]" label="something to do" counter=50></v-text-field>
+                            <v-date-picker
+                                v-model="date"
+                                :allowed-dates="allowedDates"
+                                class="mt-4"
+                                min="2022-04-01"
+                                max="2024-03-31"
+                            ></v-date-picker>
                         </v-col>
                         <v-btn class="mr-4" v-on:click="submit">submit</v-btn>
                         <v-btn v-on:click="clear">clear</v-btn>
@@ -38,7 +45,8 @@ export default {
         limit_length: value => value.length <= 50 || "Must include 50 letters or less!",
         info: null,
         errored: false,
-        succeeded: false
+        succeeded: false,
+        date: '2022-04-01'
     }),
     methods: {
         submit() {
@@ -66,7 +74,8 @@ export default {
                 this.errored = true;
                 this.succeeded = false;
             });
-        }
+        },
+        allowedDates: val => parseInt(val.split('-')[2], 10) % 1 === 0,
     }
 }
 </script>
