@@ -9,6 +9,7 @@ create table users (
 create table tasks (
     id serial not null primary key,
     content text,
+    deadline date,
     created_at date,
     updated_at date,
     user_id varchar(128),
