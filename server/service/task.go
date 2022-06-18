@@ -14,7 +14,7 @@ type TaskService struct{}
 func (TaskService) GetTaskList(userId string) ([]model.Task, error) {
 	fmt.Println("GetTaskList")
 
-	stmt := "select id, content from tasks where user_id = " + userId
+	stmt := "select id, content, deadline from tasks where user_id = " + userId
 	rows, err := Db.Query(stmt)
 	if err != nil {
 		fmt.Println("Select error")
@@ -25,7 +25,7 @@ func (TaskService) GetTaskList(userId string) ([]model.Task, error) {
 	var tasks []model.Task
 	for rows.Next() {
 		task := model.Task{}
-		err = rows.Scan(&task.Id, &task.Content)
+		err = rows.Scan(&task.Id, &task.Content, &task.Deadline)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func (TaskService) GetTaskById(id string) (model.Task, error) {
 	fmt.Println("GetTaskById")
 
 	var task model.Task
-	err := Db.QueryRow("select id, content from tasks where id = ?", id).Scan(&task.Id, &task.Content)
+	err := Db.QueryRow("select id, content, deadline from tasks where id = ?", id).Scan(&task.Id, &task.Content, &task.Deadline)
 	if err != nil {
 		fmt.Println("Select error")
 	}
