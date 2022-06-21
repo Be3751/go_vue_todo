@@ -15,18 +15,15 @@ services:
       - "3000:3000"
     volumes:
       - ./server:/go/src/server # マウントするディレクトリの指定
+    env_file:
+      - ./.env
     tty: true # コンテナの永続化
   db: 
     platform: linux/x86_64 # M1Mac用にプラットフォームを指定
     container_name: db
     image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: todo
-      MYSQL_USER: be3
-      MYSQL_PASSWORD: password
-      MYSQL_PORT: 3306
-      TZ: 'Asia/Tokyo'
+    env_file:
+      - ./.env
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306" # コンテナの3306番をローカルの3306番にマッピング
@@ -35,3 +32,13 @@ services:
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./db/data:/var/lib/mysql
       - ./db/logs:/var/logs/mysql
+  proxy-server:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "8088:80"
+    volumes:
+      - ./r-proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./r-proxy/public:/usr/share/nginx/html
+    env_file:
+      - ./.env
