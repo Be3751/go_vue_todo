@@ -3,3 +3,4 @@ server/tmp
 db/data
 db/logs
 .env
+.DS_Store

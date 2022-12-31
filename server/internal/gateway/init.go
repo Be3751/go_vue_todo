@@ -1,4 +1,4 @@
-package service
+package gateway
 
 import (
 	"database/sql"
