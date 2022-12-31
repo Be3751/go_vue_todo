@@ -1,7 +1,7 @@
 -- drop table tasks if exists;
 
 create table users (
-    id varchar(128) primary key,
+    id varchar(128) primary key, 
     uuid varchar(64) unique, 
     enc_pwd varchar(255) not null
 );
